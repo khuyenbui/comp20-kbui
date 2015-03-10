@@ -10,12 +10,12 @@
                         function init()
                         {
                                 // Faneuil Hall
-                                var landmark = new google.maps.LatLng(42.3599611, -71.0567528);
+                                myLocation = new google.maps.LatLng(myLat, myLng);
 
                                 // Set up map
                                 var myOptions = {
                                         zoom: 13, // The larger the zoom number, the bigger the zoom
-                                        center: landmark,
+                                        center: myLocation,
                                         mapTypeId: google.maps.MapTypeId.ROADMAP
                                 };
 
@@ -23,8 +23,8 @@
                                 var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
                                 // Create a marker
                                 var marker = new google.maps.Marker({
-                                        position: landmark,
-                                        title: "Faneuil Hall, Boston, MA"
+                                        position: myLocation,
+                                        title: "Tufts U, Medford, MA"
                                 });
                                 marker.setMap(map);
 
@@ -40,22 +40,39 @@
                         console.log('After setting up map');
                         // step 1: get my location
                        function success(pos) {
-                               var crd = pos.coords;
+                               crd = pos.coords;
+                               myLat = crd.latitude;
+                               myLng = crd.longitude;
                                console.log('Your current position is:');
                                console.log('Latitude : ' + crd.latitude);
                                console.log('Longitude: ' + crd.longitude);
                                console.log('More or less ' + crd.accuracy + ' meters.');
-                        }
-                        geo = navigator.geolocation;
-                        geo.getCurrentPosition(success);
-                        console.log('After get my location');
-                        // step 2: send my location to datastore
-                        // step 3: retrieve & display others' location.
-                        function parse()
+                        //  send my location to datastore using POST
+                                params = "login=khuyenbui&lat=" + myLat + "&lng=" + myLng;
+                                xhr = new XMLHttpRequest();
+                                xhr.open("POST", "https://secret-about-box.herokuapp.com/sendLocation", true);
+                                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                xhr.onreadystatechange = parseData();
+                                xhr.send(params);
+                                }
+                                geo = navigator.geolocation;
+                                geo.getCurrentPosition(success);
+                                console.log('After get my location');
+                        //
+                        //  retrieve others' location.
+                        function parseData()
                         {
-                                request = new XMLHTTPRequest();
-                                request.open("GET", "data.json", true);
+                                console.log('in parseData');
+                                if (xhr.readyState == 4 && xhr.status == 200) { // good respnse
+                                        converted = JSON.parse(xhr.responseText);
+                                        console.log('good response');
+                                        for (i = 0; i < converted.length; i++) {
+                                                console.log('what do I get');
+                                            //    messagesDiv.innerHTML += '<p>' + converted[i]['content'];
+                                        }
+                                }
                         }
+                        // display their locations
                 </script>
         </head>
 
