@@ -21,12 +21,12 @@ function parse(){
                 converted = JSON.parse(request.responseText);
                 messagesDiv = document.getElementById('messages')
                 for (i = 0; i < converted.length; i++) {
-                        messagesDiv.innerHTML += '<p>' + converted[i]['content']
+                        messagesDiv.innerHTML += '<p>' + converted[i]['content'];
                 }
                 // how to get the key if we don't know the JSON? Just spit the first elem out!
         }
         else if (request.readyState == 4 && request.status != 200) { // bad
-                alert('Hacked by Khuyen')
+                alert('Hacked by Khuyen');
         else
-                alert('NOT YET')
+                alert('NOT YET');
 }
