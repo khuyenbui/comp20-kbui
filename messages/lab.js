@@ -8,14 +8,14 @@ function parse() {
                 // NO: no
 
         // step 3: set up way to manage the response
-        request.onreadystatechange = parse;
+        request.onreadystatechange = parseData;
 
         // step 4: execute the request. (ALTHOUGH IT READS "SEND" - "fire away"
         request.send();
 
 }
 
-function parse(){
+function parseData(){
         if (request.readyState == 4 && request.status == 200) { // good respnse
                 alert(request.responseText);
                 converted = JSON.parse(request.responseText);
