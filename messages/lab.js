@@ -8,7 +8,7 @@ function parse() {
                 // NO: no
 
         // step 3: set up way to manage the response
-        request.onreadystatechange = parse; // whut is this?
+        request.onreadystatechange = parse;
 
         // step 4: execute the request. (ALTHOUGH IT READS "SEND" - "fire away"
         request.send();
@@ -21,7 +21,7 @@ function parse(){
                 converted = JSON.parse(request.responseText);
                 messagesDiv = document.getElementById('messages')
                 for (i = 0; i < converted.length; i++) {
-                        messagesDiv.innerHTML += '<p>' + converted.[i]['content']
+                        messagesDiv.innerHTML += '<p>' + converted[i]['content']
                 }
                 // how to get the key if we don't know the JSON? Just spit the first elem out!
         }
@@ -29,5 +29,4 @@ function parse(){
                 alert('Hacked by Khuyen')
         else
                 alert('NOT YET')
-//        console.log('The ready state is ' + request.readyState);
 }
