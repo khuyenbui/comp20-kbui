@@ -27,6 +27,7 @@ function parse(){
         }
         else if (request.readyState == 4 && request.status != 200) { // bad
                 alert('Hacked by Khuyen');
+        }
         else
                 alert('NOT YET');
 }
