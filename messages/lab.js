@@ -17,7 +17,6 @@ function parse() {
 
 function parseData(){
         if (request.readyState == 4 && request.status == 200) { // good respnse
-                alert(request.responseText);
                 converted = JSON.parse(request.responseText);
                 messagesDiv = document.getElementById('messages')
                 for (i = 0; i < converted.length; i++) {
@@ -28,6 +27,4 @@ function parseData(){
         else if (request.readyState == 4 && request.status != 200) { // bad
                 alert('Hacked by Khuyen');
         }
-        else
-                alert('NOT YET');
 }
