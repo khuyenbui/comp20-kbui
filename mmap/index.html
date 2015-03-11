@@ -38,7 +38,8 @@
                                         infowindow.setContent(marker.title);
                                         infowindow.open(map, marker);
                                 });
-                        console.log('After setting up map');
+                       }
+                    console.log('After setting up map');
                         // step 1: get my location
                        function success(pos) {
                                crd = pos.coords;
@@ -76,7 +77,6 @@
                         // info window for each location: login and distance
                         }
                         // display their locations
-                    }
                 </script>
         </head>
 
