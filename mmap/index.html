@@ -28,6 +28,8 @@
                                 });
                                 marker.setMap(map);
 
+                                // I need to create a marker for every location so loop somewhere.
+
                                 // This is a global info window...
                                 var infowindow = new google.maps.InfoWindow();
 
@@ -36,17 +38,14 @@
                                         infowindow.setContent(marker.title);
                                         infowindow.open(map, marker);
                                 });
-                        }
                         console.log('After setting up map');
                         // step 1: get my location
                        function success(pos) {
                                crd = pos.coords;
                                myLat = crd.latitude;
                                myLng = crd.longitude;
-                               console.log('Your current position is:');
                                console.log('Latitude : ' + crd.latitude);
                                console.log('Longitude: ' + crd.longitude);
-                               console.log('More or less ' + crd.accuracy + ' meters.');
                         //  send my location to datastore using POST
                                 params = "login=khuyenbui&lat=" + myLat + "&lng=" + myLng;
                                 xhr = new XMLHttpRequest();
@@ -68,11 +67,16 @@
                                         console.log('good response');
                                         for (i = 0; i < converted.length; i++) {
                                                 console.log('what do I get');
-                                            //    messagesDiv.innerHTML += '<p>' + converted[i]['content'];
+                                                aLat = converted[i]['lat'];
+                                                aLng = converted[i]['lng'];
+                        //    messagesDiv.innerHTML += '<p>' + converted[i]['content'];
                                         }
                                 }
+                        // create marker
+                        // info window for each location: login and distance
                         }
                         // display their locations
+                    }
                 </script>
         </head>
 
