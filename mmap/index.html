@@ -25,11 +25,20 @@
                                 center: myLocation,
                                 mapTypeId: google.maps.MapTypeId.ROADMAP
                             };
-
                             // Create the map in the "map_canvas" <div>
                             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-
+                            // marker for myself
+                            var marker = new google.maps.Marker({
+                                position: myLocation,
+                                map: map,
+                                title:"Khuyen is here!"
+                            });
+                            marker.setMap(map);
+                            // Open info window on click of marker
+                            google.maps.event.addListener(marker, 'click',
+                                function() { infowindow.setContent(marker.title);
+                                    infowindow.open(map, marker);
+                                });
                              // step: get my location
                             geo = navigator.geolocation;
                             geo.getCurrentPosition(success);
@@ -54,21 +63,25 @@
                                 xhr.onreadystatechange = parseData;
                                 xhr.send(params);
                         }
-                                
-                        //
                         //  retrieve others' location.
                         function parseData()
                         {
                                 console.log('in parseData');
                                 if (xhr.readyState == 4 && xhr.status == 200) { // good respnse
                                         converted = JSON.parse(xhr.responseText);
-                                        console.log('good response');
                                         console.log(converted);
                                         for (i = 0; i < converted.length; i++) {
-                                                console.log('what do I get');
-                                                aLat = converted[i]['lat'];
-                                                aLng = converted[i]['lng'];
-                        //    messagesDiv.innerHTML += '<p>' + converted[i]['content'];
+                                                var aLat = converted[i]['lat'];
+                                                var aLng = converted[i]['lng'];
+                                                var aLatLng = new google.maps.LatLng(aLat, aLng)
+                                                var aInfo = converted[i]['login']
+                                                var aTitle = aInfo // must add distance
+                                                var marker = new google.maps.Marker({
+                                                     position: aLatLng,
+                                                     map: map,
+                                                     title: aInfo,
+                                                });
+                                                setMarker(map);
                                         }
                                 }
                         // create marker
