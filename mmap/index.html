@@ -7,57 +7,54 @@
                 <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
                 <link rel="stylesheet" href="marauder.css" />
                 <script>
-                        var myLat, myLng;
+                        var myLat = 0;
+                        var myLng = 0;
+                        var infowindow = new google.maps.InfoWindow();
+                        var map;
+                        var myOptions;
+                        var myLocation;
+                        var xhr;
+
                         function init()
                         {
-                                myLocation = new google.maps.LatLng(myLat, myLng);
+                            myLocation = new google.maps.LatLng(myLat, myLng);
 
-                                // Set up map
-                                var myOptions = {
-                                        zoom: 13, // The larger the zoom number, the bigger the zoom
-                                        center: myLocation,
-                                        mapTypeId: google.maps.MapTypeId.ROADMAP
-                                };
+                            // Set up map
+                            myOptions = {
+                                zoom: 13, // The larger the zoom number, the bigger the zoom
+                                center: myLocation,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            };
 
-                                // Create the map in the "map_canvas" <div>
-                                var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-                                // Create a marker
-                                var marker = new google.maps.Marker({
-                                        position: myLocation,
-                                        title: "Tufts U, Medford, MA"
-                                });
-                                marker.setMap(map);
+                            // Create the map in the "map_canvas" <div>
+                            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-                                // I need to create a marker for every location so loop somewhere.
 
-                                // This is a global info window...
-                                var infowindow = new google.maps.InfoWindow();
-
-                                // Open info window on click of marker
-                                google.maps.event.addListener(marker, 'click', function() {
-                                        infowindow.setContent(marker.title);
-                                        infowindow.open(map, marker);
-                                });
+                             // step: get my location
+                            geo = navigator.geolocation;
+                            geo.getCurrentPosition(success);
                        }
-                    console.log('After setting up map');
-                        // step 1: get my location
+
                        function success(pos) {
+                                // Got my location
                                crd = pos.coords;
                                myLat = crd.latitude;
                                myLng = crd.longitude;
+
+                                // Pan to new location
+                               myLocation = new google.maps.LatLng(myLat, myLng);
+                               map.panTo(myLocation);
                                console.log('Latitude : ' + crd.latitude);
                                console.log('Longitude: ' + crd.longitude);
                         //  send my location to datastore using POST
-                                params = "login=khuyenbui&lat=" + myLat + "&lng=" + myLng;
+                                params = "login=HarleyRhoden&lat=" + myLat + "&lng=" + myLng;
                                 xhr = new XMLHttpRequest();
                                 xhr.open("POST", "https://secret-about-box.herokuapp.com/sendLocation", true);
                                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                                xhr.onreadystatechange = parseData();
+                                xhr.onreadystatechange = parseData;
                                 xhr.send(params);
-                                }
-                                geo = navigator.geolocation;
-                                geo.getCurrentPosition(success);
-                                console.log('After get my location');
+                        }
+                                
                         //
                         //  retrieve others' location.
                         function parseData()
@@ -66,6 +63,7 @@
                                 if (xhr.readyState == 4 && xhr.status == 200) { // good respnse
                                         converted = JSON.parse(xhr.responseText);
                                         console.log('good response');
+                                        console.log(converted);
                                         for (i = 0; i < converted.length; i++) {
                                                 console.log('what do I get');
                                                 aLat = converted[i]['lat'];
