@@ -71,7 +71,7 @@
                                 if (xhr.readyState == 4 && xhr.status == 200) { // good respnse
                                         converted = JSON.parse(xhr.responseText);
                                         console.log(converted);
-                                        for (i = 0; i < converted.length; i++) {
+                                     /*   for (i = 0; i < converted.length; i++) {
                                                 var aLat = converted[i]['lat'];
                                                 var aLng = converted[i]['lng'];
                                                 var aLatLng = new google.maps.LatLng(aLat, aLng)
@@ -83,6 +83,7 @@
                                                          title: "Khuyen is here"
                                                     });
                                                     marker.setMap(map);
+                                                    continue;
                                                 }
                                                 var aTitle = aInfo // must add distance
                                                 var marker = new google.maps.Marker({
@@ -91,7 +92,7 @@
                                                      title: aInfo,
                                                 });
                                                 marker.setMap(map);
-                                        }
+                                        } */
                                 }
                         }
 /*                        function distancefromMe(
