@@ -37,6 +37,7 @@
                             // Open info window on click of marker
                             google.maps.event.addListener(marker, 'click',
                                 function() { infowindow.setContent(marker.title);
+                                    console.log('clicked');
                                     infowindow.open(map, marker);
                                 });
                              // step: get my location
@@ -75,6 +76,14 @@
                                                 var aLng = converted[i]['lng'];
                                                 var aLatLng = new google.maps.LatLng(aLat, aLng)
                                                 var aInfo = converted[i]['login']
+                                                if (aInfo == "HarleyRhoden") {
+                                                    var marker = new google.maps.Marker({
+                                                         position: myLocation,
+                                                         map: map,
+                                                         title: "Khuyen is here"
+                                                    });
+                                                    marker.setMap(map);
+                                                }
                                                 var aTitle = aInfo // must add distance
                                                 var marker = new google.maps.Marker({
                                                      position: aLatLng,
