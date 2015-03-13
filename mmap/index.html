@@ -34,12 +34,6 @@
                                 title:"Khuyen is here!"
                             });
                             marker.setMap(map);
-                            // Open info window on click of marker
-                            google.maps.event.addListener(marker, 'click',
-                                function() { infowindow.setContent(marker.title);
-                                    console.log('clicked');
-                                    infowindow.open(map, marker);
-                                });
                              // step: get my location
                             geo = navigator.geolocation;
                             geo.getCurrentPosition(success);
@@ -50,7 +44,6 @@
                                crd = pos.coords;
                                myLat = crd.latitude;
                                myLng = crd.longitude;
-
                                 // Pan to new location
                                myLocation = new google.maps.LatLng(myLat, myLng);
                                map.panTo(myLocation);
@@ -75,7 +68,8 @@
                                                 var aLat = converted[i]['lat'];
                                                 var aLng = converted[i]['lng'];
                                                 var aLatLng = new google.maps.LatLng(aLat, aLng)
-                                                var aInfo = converted[i]['login']
+                                                var aInfo = converted[i]['login'];
+                                                // if it's me then change the title;
                                                 if (aInfo == "HarleyRhoden") {
                                                     var myImage = "frustrated.png";
                                                     var marker = new google.maps.Marker({
@@ -85,15 +79,26 @@
                                                          title: "Khuyen is here"
                                                     });
                                                     marker.setMap(map);
+                                                    var infowindow = new google.maps.InfoWindow();
+                                                    google.maps.event.addListener(marker, 'click', function() {
+                                                            infowindow.setContent(this.title);
+                                                            infowindow.open(map, this);
+                                                         });
                                                     continue;
                                                 }
-                                                var aTitle = aInfo // must add distance
+                                                var aTitle = aInfo;
                                                 var marker = new google.maps.Marker({
                                                      position: aLatLng,
                                                      map: map,
                                                      title: aInfo + ". Distance from me: " + distanceFromMe(aLat, aLng) + " miles."
                                                 });
                                                 marker.setMap(map);
+                                                   var ainfowindow = new google.maps.InfoWindow();
+                                                    google.maps.event.addListener(marker, 'click', function() {
+                                                            ainfowindow.setContent(this.title);
+                                                            console.log('after clicking');
+                                                            ainfowindow.open(map, this);
+                                                         });
                                         }
                                 }
                         }
