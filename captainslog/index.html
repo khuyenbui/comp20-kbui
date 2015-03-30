@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+        <title>Captain's Log</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script>
+                $("document").ready(function() {
+                        $('#msg').on('change', function (event) {
+                                message = $(this).value;
+                                $('div#log').append('<p>Hi!</p>'+message);
+                                if  ( event.keyCode == 13) { // enter key pressed
+                                        console.log('Entered.');
+                                        // get the input
+                                        console.log($("#msg").value);
+                                        // get the time of input
+                                        // store input and time in localStorage
+                                        // output into HTML
+                                }
+                        });
+                });
+        </script>
+</head>
+
+<body>
+        <h1>Captain's Log</h1>
+        <h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
+        <div id="log"></div>
+</body>
+</html>
