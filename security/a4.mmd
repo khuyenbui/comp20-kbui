@@ -1,21 +1,25 @@
-## Introduction 
-The web application named *Marauder's Map*  has two parts: a front-end which displays a map showing the user's location and other users who submitted the location. The server side includes a database to store the locations and an interface to submit and receive those locations. My tasks were to 1) find potential security vulnerabilities in the application and 2) make recommendations to improve them.
-## Methodology 
+
+## Introduction
+ - The web application named *Marauder's Map*  has two parts: a front-end which displays a map showing the user's location and other users who submitted the location. The server side includes a database to store the locations and an interface to submit and receive those locations. My tasks were to 1) find potential security vulnerabilities in the application and 2) make recommendations to improve them.
+
+## Methodology
  - I first black-box testing the back-end server https://fast-lake-3324.herokuapp.com/ by using Postman extension on Chrome to manipulate responses. I could perform a cross-site scripting attack from here. Then I perused the source code from my partner to find some logic error, and then consider the application and its functionality to see its privacy risk.
 
-## Abstract of Findings 
- - There are two main vulnerability issues with the application. First, user input is not sanitized; an attacker can easily enter a malicious snippet of code as a login name. Moreover, sensible input is also not checked, which may lead to false location report. The second risk is with privacy; anyone could easily access the map and find out the locations of everyone else without their permissions. 
+## Abstract of Findings
+ - There are two main vulnerability issues with the application. First, user input is not sanitized; an attacker can easily enter a malicious snippet of code as a login name. Moreover, sensible input is also not checked, which may lead to false location report. The second risk is with privacy; anyone could easily access the map and find out the locations of everyone else without their permissions.
 
 ## Issues Found
 #### 1. Cross site scripting
  - Affect POST API for https://fast-lake-3324.herokuapp.com/sendLocation
- - Severity: **High** because there is no sanitizing of user input data. 
+ - Severity: **High** because there is no sanitizing of user input data.
  Several risks involved with cross site scripting (XSS): inserting fraudulent content like the annoying alert box in the photo below. I also injected a script that makes the application load in 10s (which I can easily increase to infinite time)
- > <script>0;var date=new Date(); do{curDate = new Date();}while(curDate-date<10000) </script>
- - I found the problem by understanding that there exists a POST API to sendLocation that takes in login name.
- -![Before XSS](/xsshacked0.png "Before XSS")
- -![After XSS](/xsshacked1.png "Before XSS")
- 
+> <script>0;var date=new Date(); do{curDate = new Date();}while(curDate-date<10000) </script>
+ - I found the problem by understanding that there exists a POST API to sendLocation that takes in login name. Here are some screen shots.
+ - Before
+ ![Before XSS](https://github.com/tuftsdev/comp20-kbui/blob/gh-pages/security/xsshacked0.png "Before XSS")
+ - After
+ ![After XSS](https://github.com/tuftsdev/comp20-kbui/blob/gh-pages/security/xsshacked1.png "After XSS")
+
  - Resolution: Include sanitizing step from the server side where "<" and ">" are converted into &lt and &gt so that they will appear as symbol instead of being executed as script.
 
 #### 2. False data: where on earth?
@@ -24,13 +28,13 @@ The web application named *Marauder's Map*  has two parts: a front-end which dis
  - Given that the front-end of the application displays all users' locations on Google map, it is a surprising that server does not check for insensible input. For example, I could send a request where the location is somewhere in Antartica; there is no way for other users to know if I am actually there. Worse yet, we know that mathematically _-180 < longitude < 180_ and _0 < latitude < 360_. Any value outside of the range should result in a error response.
  - I found this vulnerability issue from examining the source code. The longitude and latitude are only sanitized using parseFloat() method but never checked for validity of the input.
  - Resolution: assert for the sensibility of the input longitude and latitude; if they don't meet the requirement, return an error message. The code may look like this.
- > <script> if (!(-180 <= lat <= 180) || !(0 <= lng <= 360))
- > response.send("Please submit a sensible value of latitude/longitude!") </script>
+> <script> if (!(-180 <= lat <= 180) || !(0 <= lng <= 360))
+> response.send("Please submit a sensible value of latitude/longitude!") </script>
 
 #### 3. No password verification for each login name
  - Affect GET '/' API.
  - Severity: **High**
  - Given that this application returns a collection of login names and their latest locations, it is somewhat surprising that there is no authentication in the form of a password. If I submit my location to the server, everyone else will know where I am at. I may agree with giving the server's access to my location but not everyone else. It is a violation of privacy right.
- - I found the problem by looking at the main '/' page where all the locations are shown. 
+ - I found the problem by looking at the main '/' page where all the locations are shown.
  - Resolution: Set up an authentication system (login and password) for every user of the Marauder's map. Everyone who wants to access to it has to submit their username and password; the server will verify if this pair is in the database (or this person belongs to the tribe of the Marauders). Only then s/he can view the map.
 
