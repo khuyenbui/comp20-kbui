@@ -860,18 +860,24 @@ body .markdown-body
   float: left;
   margin: 0.3em 0 0.25em -1.6em;
   vertical-align: middle;
-}</style><title>a4</title></head><body><article class="markdown-body"><h2>
+}</style><title>Security Assessment of Marauder's Map</title></head><body><article class="markdown-body"><h1>
+<a id="user-content-security-assessment-of-marauders-map" class="anchor" href="#security-assessment-of-marauders-map" aria-hidden="true"><span class="octicon octicon-link"></span></a>Security Assessment of Marauder's Map</h1>
+
+<p>Prepared by <a href="https://github.com/khuyenbui">Khuyen Bui</a> on 24th May 2015</p>
+
+<h2>
 <a id="user-content-introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
 <ul>
-<li>The web application named <em>Marauder's Map</em>  has two parts: a front-end which displays a map showing the user's location and other users who submitted the location. The server side includes a database to store the locations and an interface to submit and receive those locations. My tasks were to 1) find potential security vulnerabilities in the application and 2) make recommendations to improve them.</li>
+<li>The web application named <em>Marauder's Map</em>  by <a href="https://github.com/thekugelmeister">thekugelmeister</a> for <a href="http://tuftsdev.github.io/WebProgramming/assignments/a4.html">comp20 assignment 4</a> has two parts: a front-end which displays a map showing the user's location and other users who submitted the location. The server side includes a database to store the locations and an interface to submit and receive those locations. My tasks were to 1) find potential security vulnerabilities in the application and 2) make recommendations to improve them.</li>
+<li>Security risk or vulnerability is defined as the potential for the application to stop working properly or for its protected data to be disclosed unwantedly. </li>
 </ul>
 
 <h2>
 <a id="user-content-methodology" class="anchor" href="#methodology" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methodology</h2>
 
 <ul>
-<li>I first black-box testing the back-end server <a href="https://fast-lake-3324.herokuapp.com/">https://fast-lake-3324.herokuapp.com/</a> by using Postman extension on Chrome to manipulate responses. I could perform a cross-site scripting attack from here. Then I perused the source code from my partner to find some logic error, and then consider the application and its functionality to see its privacy risk.</li>
+<li>I first black-box testing the back-end server <a href="https://fast-lake-3324.herokuapp.com/">https://fast-lake-3324.herokuapp.com/</a> by using Postman extension on Chrome to manipulate responses. I could perform a cross-site scripting attack from here. Then I perused the source code from my partner to find some logic error, and consider the application and its functionality to see its privacy risk.</li>
 </ul>
 
 <h2>
@@ -909,7 +915,9 @@ Several risks involved with cross site scripting (XSS): inserting fraudulent con
 <li>Affect the front-end map.</li>
 <li>Severity: <strong>Medium.</strong>
 </li>
-<li>Given that the front-end of the application displays all users' locations on Google map, it is a surprising that server does not check for insensible input. For example, I could send a request where the location is somewhere in Antartica; there is no way for other users to know if I am actually there. Worse yet, we know that mathematically <em>-180 &lt; longitude &lt; 180</em> and <em>0 &lt; latitude &lt; 360</em>. Any value outside of the range should result in a error response.</li>
+<li>Given that the front-end of the application displays all users' locations on Google map, it is a surprising that server does not check for insensible input. For example, I could send a request where the location is somewhere in Antartica; there is no way for other users to know if I am actually there. Worse yet, we know that mathematically
+&gt;<em>-180 &lt; longitude &lt; 180</em> and <em>0 &lt; latitude &lt; 360</em>.
+Any value outside of the range should result in a error response.</li>
 <li>I found this vulnerability issue from examining the source code. The longitude and latitude are only sanitized using parseFloat() method but never checked for validity of the input.</li>
 <li>Resolution: assert for the sensibility of the input longitude and latitude; if they don't meet the requirement, return an error message. The code may look like this.
 &gt; </li>
@@ -925,5 +933,12 @@ Several risks involved with cross site scripting (XSS): inserting fraudulent con
 <li>Given that this application returns a collection of login names and their latest locations, it is somewhat surprising that there is no authentication in the form of a password. If I submit my location to the server, everyone else will know where I am at. I may agree with giving the server's access to my location but not everyone else. It is a violation of privacy right.</li>
 <li>I found the problem by looking at the main '/' page where all the locations are shown.</li>
 <li>Resolution: Set up an authentication system (login and password) for every user of the Marauder's map. Everyone who wants to access to it has to submit their username and password; the server will verify if this pair is in the database (or this person belongs to the tribe of the Marauders). Only then s/he can view the map.</li>
+</ul>
+
+<h2>
+<a id="user-content-conclusion" class="anchor" href="#conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion</h2>
+
+<ul>
+<li>The application Marauder's map has several serious vulnerability and privacy issues. Fortunately, they can be fixed at rather low cost. The authentication system (issue #3) could be implemented manually; however I will recommend using existing popular login system like Google or Facebook since they have been better tested for security. </li>
 </ul>
 </article></body></html>
